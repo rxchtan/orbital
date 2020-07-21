@@ -1,29 +1,30 @@
-/*
-.dropdown {
-    background-color: white;
-  }
-
-  #body::placeholder {
-    color: #1e2f4d;
-  }
-
-  textarea {
-    resize: none;
-    width: 100%;
-    height: 100px;
-  }
-  */
-
-
- @import url('https://fonts.googleapis.com/css?family=Amatic+SC');
+@import url('https://fonts.googleapis.com/css?family=Amatic+SC');
  
- /* .container {
-    padding: 10%;
-    float: left;
-  } */
 
-  .Title {
+.Title {
     /* float: right; */
     margin-left: 20%;
     margin-top: 10%;
+}
+
+.heading {
+  font-family: Comic Sans MS;
+  font-size: 250%;
+  /* box-shadow: -7px -6px 4px 0px #1f2f4d;
+  background-color: white; */
+}
+
+h8.first-choice {
+  font-size: 140%;
+  color: black;
+}
+
+h8.second-choice {
+  font-size: 140%;
+  color: black;
+}
+
+.createpost-container {
+  margin-left: 4%;
+  padding: 5%;
 }

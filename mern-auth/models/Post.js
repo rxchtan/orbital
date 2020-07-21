@@ -9,7 +9,9 @@ const PostSchema = new Schema({
     location: String,
     budget: String,
     review: String,
-    likes: Number
+    type: String,
+    likes: Number,
+    date: { type: Date, default: Date.now }
 });
 const Post = mongoose.model('Post', PostSchema);
 

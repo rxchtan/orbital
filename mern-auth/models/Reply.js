@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 // Create Schema
 const ReplySchema = new Schema({
     reply: String,
+    user: String,
     id: String
 });
 

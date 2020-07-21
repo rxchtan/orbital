@@ -11,7 +11,7 @@ import category from '../layout/category.png';
 import Likes from './Likes';
 //import { post } from '../../../../routes/api/users';
 
-class allPosts extends Component {
+class ExperiencePosts extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,8 +20,9 @@ class allPosts extends Component {
     }
 
     async componentDidMount() {
-        const posts = (await axios.get('/api/posts')).data;
-        this.setState({ posts });
+        const posts = (await axios.get('/api/posts/ExperiencePosts')).data;
+        const filteredPosts = posts.filter(post => post.type === "experience");
+        this.setState({ posts: filteredPosts });
     }
 
     render() {
@@ -30,12 +31,9 @@ class allPosts extends Component {
             <div className="container">
                 <div style={{ marginTop: "2rem" }} className="row">
                     <div>
-                        <h4>
-                            Want to share your SEP story? Create a review {" "}
-                            <Link to="/createPost">
-                                here!
+                        <Link to="/createPost">
+                            Click here to add a review!
                         </Link>
-                        </h4>
                         <h3>About to embark on SEP but is unsure about the entire process?</h3>
                         <h4>Pals On Exchange is here to clear your doubts! </h4>
 
@@ -63,7 +61,7 @@ class allPosts extends Component {
     }
 }
 
-allPosts.propTypes = {
+ExperiencePosts.propTypes = {
     auth: PropTypes.object.isRequired
 };
 
@@ -72,6 +70,4 @@ const mapStateToProps = state => ({
 });
 export default connect(
     mapStateToProps
-)(allPosts);
-
-//export default withRouter(allPosts);
+)(ExperiencePosts);

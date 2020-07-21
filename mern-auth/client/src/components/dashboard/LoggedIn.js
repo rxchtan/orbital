@@ -12,9 +12,8 @@ class LoggedIn extends Component {
     render() {
         return (
             <div className="landing-container">
-
                 <div className="row">
-                    <Logout />
+                    <Logout history={this.props.history} />
                     <h4>Welcome to </h4>
                     <img id="palsLogo" src={newLogo} alt="logo"></img>
                 </div>

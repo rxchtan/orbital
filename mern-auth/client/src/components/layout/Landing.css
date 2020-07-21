@@ -25,6 +25,7 @@ img#palsLogo {
     width: 35%;
     margin-left: 33%;
     position: relative;
+    padding-top: 10px;
 }
 
 @media only screen and (max-width: 768px) {

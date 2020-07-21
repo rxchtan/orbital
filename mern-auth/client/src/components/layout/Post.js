@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import axios from "axios";
 import CreateComment from './CreateComment';
 import locationPin1 from '../layout/locationPin1.png';
@@ -29,20 +31,21 @@ class Post extends Component {
     }
 
     async submitComment(comment) {
-        await axios.post(`api/comments/${this.state.post._id}`, { comment });
+        const commenting = { text: comment, user: this.props.auth };
+        await axios.post(`api/comments/${this.state.post._id}`, commenting);
         await this.refreshPost();
+        //console.log(commenting);
     }
 
     render() {
         const { post, comments } = this.state;
+        const { user } = this.props.auth;
         if (post === null) return <p>Loading post...</p>;
         return (
-            <React.Fragment>
+            <div>
                 <div className="container">
                     <h3>Check out your friend's review here! </h3>
                     <Likes key={post._id} post={post} />
-
-
                 </div>
 
 
@@ -55,10 +58,19 @@ class Post extends Component {
                         ))}
                     </div>
                 </div>
-            </React.Fragment >
+            </div >
         )
     }
 }
 
-export default withRouter(Post);
+Post.propTypes = {
+    auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+export default connect(
+    mapStateToProps
+)(Post);
 

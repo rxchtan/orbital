@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 class Logout extends Component {
     onLogoutClick = e => {
@@ -12,11 +12,7 @@ class Logout extends Component {
     render() {
         const { user } = this.props.auth;
         return (
-            <div className="container">
-                <b>Hey there,</b> {user.name.split(" ")[0]}
-                <br />
-                <button onClick={this.onLogoutClick}>Logout</button>
-            </div>
+            <button id="regbutton" onClick={this.onLogoutClick}>Logout</button>
         );
     }
 }

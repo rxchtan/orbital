@@ -5,29 +5,31 @@ const passport = require("passport");
 const users = require("./routes/api/users");
 const app = express();
 const Post = require("./models/Post");
+const User = require("./models/User");
 const Comment = require("./models/Comment");
 const Reply = require("./models/Reply");
+/*
+const File = require("./models/File");
 var multer = require('multer')
 var cors = require('cors');
 var fs = require('fs');
-
+*/
 
 //chunks
 /*const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const methodOverride = require('method-override');
 const path = require('path');
-
+ */
 //const router = express.Router();
 
-app.use(cors());
-
-//chunks
+/*chunks
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 */
 
-
+/*
+app.use(cors());
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads')
@@ -38,12 +40,13 @@ var storage = multer.diskStorage({
 });
 
 var upload = multer({ storage: storage }).single('file');
+*/
 
 
 //chunks
 /*
-const mongoURI = 'mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false';
-
+const mongoURI = db;
+ 
 const storage = new GridFsStorage({
   url: mongoURI,
   file: (req, file) => {
@@ -57,32 +60,32 @@ const storage = new GridFsStorage({
     });
   }
 });
-
+ 
 const conn = mongoose.createConnection(mongoURI);
-
+ 
 // Init gfs
 let gfs;
-
+ 
 conn.once('open', () => {
   // Init stream
   gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection('uploads');
 });
-
-
+ 
+ 
 var upload = multer({ storage: storage });
 //.single('file');
-
+ 
 app.post('/upload', upload.single('file'), (req, res) => {
   res.redirect('/');
 });
-
+ 
 //end of chunk
-
-
+ 
+ 
 //attempt to upload post (with title, country, body, and uploads)
 /*app.post("/api/posts", upload.single('file'), (req, res) => {
-
+ 
   Post.create({
     //_id: new mongoose.Types.ObjectId(),
     title: req.body.title,
@@ -104,6 +107,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 */
 
 //uploading files to the destination 'uploads'
+/*
 app.post('/api/uploadFiles', function (req, res) {
 
   upload(req, res, function (err) {
@@ -117,6 +121,7 @@ app.post('/api/uploadFiles', function (req, res) {
   });
 
 });
+*/
 
 
 /*
@@ -124,14 +129,14 @@ router.post('/api/posts', upload.single('file'), (req, res, next) => {
   const reqFiles = "";
   const url = req.protocol + '://' + req.get('host')
   reqFiles.push(url + '/public/' + req.file.filename)
-
+ 
   const post = new Post({
     title: req.post.title,
     country: req.post.country,
     body: req.post.body,
     upload: reqFiles
   });
-
+ 
   user.save().then(result => {
     res.status(201).json({
       message: "Done upload!",
@@ -167,7 +172,9 @@ mongoose
   .connect(
     db,
     //'mongodb://localhost:27017/stats1',
-    { useNewUrlParser: true }
+    {
+      useNewUrlParser: true,
+    }
   )
   .then(() => console.log("MongoDB successfully connected"))
   .catch(err => console.log(err));
@@ -188,6 +195,7 @@ app.post('/api/posts', function (req, res) {
     location: req.body.location,
     budget: req.body.budget,
     review: req.body.review,
+    type: req.body.type,
     likes: 0
   }).then(post => {
     res.json(post)
@@ -195,6 +203,18 @@ app.post('/api/posts', function (req, res) {
 });
 
 app.get('/api/posts', function (req, res) {
+  Post.find({}).then(eachOne => {
+    res.json(eachOne)
+  });
+});
+
+app.get('/api/posts/ExperiencePosts', function (req, res) {
+  Post.find({}).then(eachOne => {
+    res.json(eachOne)
+  });
+});
+
+app.get('/api/posts/PlacePosts', function (req, res) {
   Post.find({}).then(eachOne => {
     res.json(eachOne)
   });
@@ -210,7 +230,8 @@ app.get('/api/posts/:postId', function (req, res) {
 
 app.post('/api/comments/:postId', function (req, res) {
   Comment.create({
-    comment: req.body.comment,
+    comment: req.body.text,
+    user: req.body.user.user.name,
     id: req.params.postId
   }).then(comment => {
     res.json(comment)
@@ -225,10 +246,61 @@ app.post('/api/like/:postId', function (req, res) {
         return;
       }
       res.send({ data: "Record has been Updated..!!" });
-    });
+    }
+
+  );
+
 });
 
+app.post('/api/userLike/:postId', function (req, res) {
+  User.findByIdAndUpdate(req.body.id,
+    {
+      $push:
+        { liked: req.params.postId }
+    },
+    function (err) {
+      if (err) {
+        res.send(err);
+        return;
+      }
+      res.send({ data: "Record has been Updated..!!" });
+    }
+  )
 
+});
+
+app.post('/api/userUnlike/:postId', function (req, res) {
+  User.findByIdAndUpdate(req.body.id,
+    { $pull: { liked: req.params.postId } },
+    function (err) {
+      if (err) {
+        res.send(err);
+        return;
+      }
+      res.send({ data: "Record has been Updated..!!" });
+    })
+
+});
+
+app.get('/api/userLike/:userId', function (req, res) {
+  User.findById(req.params.userId).then(post => {
+    if (!post) { return res.status(404).end(); }
+    return res.status(200).json(post.liked);
+  }).catch(err => next(err));
+});
+
+/*
+app.get('/api/userLiked/:postId', function (req, res) {
+  User.findById(req.body.id).then(post => {
+    if (!post) { return res.status(404).end(); }
+    if (post.liked === req.params.postId) {
+      return res.status(200).json(true);
+    } else {
+      return res.status(200).json(false);
+    }
+  }).catch(err => next(err));
+});
+*/
 
 app.post('/api/unlike/:postId', function (req, res) {
   Post.findByIdAndUpdate(req.params.postId, { likes: req.body.likes <= 0 ? 0 : req.body.likes - 1 },
@@ -256,7 +328,8 @@ app.get('/api/comment/:commentId', function (req, res) {
 
 app.post('/api/replies/:commentId', function (req, res) {
   Reply.create({
-    reply: req.body.reply,
+    reply: req.body.text,
+    user: req.body.user.user.name,
     id: req.params.commentId
   }).then(reply => {
     res.json(reply)

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
+import Upload from "./Upload";
 // import './PlacePost.css';
 
 
@@ -8,6 +9,7 @@ class placePost extends Component {
     constructor() {
         super();
         this.state = {
+            title: "",
             country: "",
             category: "",
             location: "",
@@ -23,11 +25,13 @@ class placePost extends Component {
     onSubmit = e => {
         e.preventDefault();
         const newPost = {
+            title: this.state.title,
             country: this.state.country,
             category: this.state.category,
             location: this.state.location,
             budget: this.state.budget,
-            review: this.state.review
+            review: this.state.review,
+            type: "place"
         };
 
 
@@ -53,6 +57,15 @@ class placePost extends Component {
                             </h3>
                         </div>
                         <form noValidate onSubmit={this.onSubmit}>
+                            <div>
+                                <p>Title of review:</p>
+                                <input
+                                    onChange={this.onChange}
+                                    value={this.state.title}
+                                    id="title"
+                                    type="text"
+                                />
+                            </div>
                             <div>
                                 <p>Country of visit:</p>
                                 <input

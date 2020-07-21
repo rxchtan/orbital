@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import locationPin1 from '../layout/locationPin1.png';
 import dollar from '../layout/dollar.png';
 import country from '../layout/country.png';
@@ -8,6 +10,7 @@ import category from '../layout/category.png';
 import liked from '../layout/liked.png';
 import unliked from '../layout/unliked.png';
 import './Likes.css';
+import { USER_LOADING } from '../../actions/types';
 // import { Button } from 'reactstrap';
 
 class Likes extends Component {
@@ -23,6 +26,15 @@ class Likes extends Component {
         const postLikes = (await axios.get(`/api/posts/${this.props.post._id}`)).data;
         const likes = postLikes.likes;
         this.setState({ likes });
+
+        const liked = (await axios.get(`api/userLike/${this.props.auth.user.id}`)).data;
+        let count;
+        if (liked.includes(this.props.post._id)) {
+            count = true;
+        } else {
+            count = false;
+        }
+        this.setState({ count });
     }
 
     async refresh() {
@@ -37,18 +49,29 @@ class Likes extends Component {
             then(() => this.setState(prevState => ({ count: prevState.count = 1 })))
             */
         this.setState({ count: !this.state.count });
-        console.log(this.state.count);
+        //console.log(this.state.count);
         const numOfLikes = { likes: this.state.likes };
+        const user = { user: this.props.user };
+        //console.log(user.user.user);
         if (this.state.count === false) {
             axios.post(`api/like/${this.props.post._id}`, numOfLikes).then(this.refresh());
+            if (this.props.user) {
+                axios.post(`api/userLike/${this.props.post._id}`, user.user.user).then(this.refresh());
+                console.log("saved to user");
+            }
         } else {
             axios.post(`api/unlike/${this.props.post._id}`, numOfLikes).then(this.refresh());
+            if (this.props.user) {
+                axios.post(`api/userUnlike/${this.props.post._id}`, user.user.user).then(this.refresh());
+                console.log("saved to user");
+            }
         }
 
     }
     //<p><button onClick={this.incrementCount}> 😻Likes: {this.state.count}</button></p>
     render() {
         const post = this.props.post;
+        //const { user } = this.props.user;
         return (
             <div key={post._id} className="col-sm-12 col-md-4 col-lg-3">
                 <div className="all-posts">
@@ -62,7 +85,7 @@ class Likes extends Component {
                         <p>😻Likes: {this.state.likes}</p>
                     </div>
 
-                    <p><button onClick={this.changeCount}> {this.state.count ? <p><img src={liked} alt="liked"></img>Unlike</p> : <p><img src={unliked} alt="unliked"></img>Like</p>} </button></p>
+                    <p><button id="like-button" onClick={this.changeCount}> {this.state.count ? <p><img src={liked} alt="liked"></img>Unlike</p> : <p><img src={unliked} alt="unliked"></img>Like</p>} </button></p>
                     <Link to={`/${post._id}`}>
                         Read More...
                 </Link>
@@ -72,4 +95,13 @@ class Likes extends Component {
     }
 }
 
-export default withRouter(Likes);
+Likes.propTypes = {
+    auth: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+export default connect(
+    mapStateToProps
+)(Likes);

@@ -29,7 +29,8 @@ class experiencePost extends Component {
         const newPost = {
             title: this.state.title,
             country: this.state.country,
-            review: this.state.review
+            review: this.state.review,
+            type: "experience"
         };
 
 

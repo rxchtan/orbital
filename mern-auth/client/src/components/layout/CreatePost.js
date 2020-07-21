@@ -191,7 +191,7 @@ import React, { Component } from "react";
 import { Link, withRouter, Redirect } from "react-router-dom";
 import axios from "axios";
 import './CreatePost.css';
-
+// import BorderWrapper from 'react-border-wrapper'
 
 class createPost extends Component {
     constructor() {
@@ -209,20 +209,16 @@ class createPost extends Component {
         });
     }
 
-    // formSubmit(event) {
-    //   event.preventDefault();
-    //   console.log(this.state.selectedOption)
-    //   // this.state.selectedOption === "my experience" ? 
-    //   // // (<experiencePost/>) : null
-    // }
 
     formSubmit = e => {
         e.preventDefault();
         console.log(this.state.selectedOption)
-        if (this.state.selectedOption === "my experience") { // if value of "No" option is selected
-            this.props.history.push("experiencePost"); // navigate to another route
+        if (this.state.selectedOption === "my experience") {
+            this.props.history.push("experiencePost");
+        } else if (this.state.selectedOption === "my memory") {
+            this.props.history.push("imagePost");
         } else {
-            this.props.history.push("placePost"); // navigate to another route
+            this.props.history.push("placePost");
         }
     }
 
@@ -230,16 +226,10 @@ class createPost extends Component {
 
     render() {
         return (
-            //     <div className="Title">
-            //       <p>I want to share about...</p>
-
-            //     <ul className="select">
-            //     <li><a href="/experiencePost">my experience</a></li>
-            //     <li><a href="/placePost">a place</a></li>
-            // </ul></div>
+            // <BorderWrapper>
             <form onSubmit={this.formSubmit}>
-                <div class="container">
-                    <p>I want to share about</p>
+                <div className="createpost-container">
+                    <h7 class="heading">I want to share about...</h7>
                     <div className="radio">
                         <label>
                             <input
@@ -248,8 +238,8 @@ class createPost extends Component {
                                 checked={this.state.selectedOption === "my experience"}
                                 onChange={this.onValueChange}
                             />
-              my experience
-            </label>
+                            <h8 class="first-choice">✈️ my experience</h8>
+                        </label>
                     </div>
                     <div className="radio">
                         <label>
@@ -259,17 +249,29 @@ class createPost extends Component {
                                 checked={this.state.selectedOption === "a place"}
                                 onChange={this.onValueChange}
                             />
-              a place
-            </label>
+                            <h8 class="first-choice">🏙️ a place</h8>
+                            {/* </label>
+                        </div>
+                        <div className="radio">
+                            <label>
+                                <input
+                                    type="radio"
+                                    value="a memory"
+                                    checked={this.state.selectedOption === "a memory"}
+                                    onChange={this.onValueChange}
+                                />
+                <h8 class="first-choice"> a memory</h8> */}
+                        </label>
                     </div>
                     <div>
                         Selected option is : {this.state.selectedOption}
                     </div>
                     <button className="btn btn-default" type="submit">
                         Next
-          </button>
+            </button>
                 </div>
             </form>
+            // </BorderWrapper>
         );
     }
 }

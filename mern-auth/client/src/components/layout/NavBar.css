@@ -18,7 +18,6 @@ img {
 
 .nav li a {
     display: block;
-   
 }
 
 
@@ -32,20 +31,24 @@ img {
     float: right;
 }
 
-#reg-btn {
+#regbutton {
     margin-right: 10px;
     color: #1E2F4D;
+    background-color: #ccddef;
     width: 100px;
+    height: 45px;
     letter-spacing: 1.5px;
     border-radius: 5px;
-    padding: 10px;
+    padding: 2px;
 }
 
-#log-btn {
+#loginbutton {
+    height: 45px;
     width: 100px;
     letter-spacing: 1.5px;
-    padding: 7.5px;
+    padding: 2px;
     color: #1E2F4D;
+    background-color: #ccddef;
     border-radius: 5px;
     margin-right: 10px;
 }
@@ -59,9 +62,9 @@ body {
   background-attachment: fixed;
 }
 
-img#palsLogo1 {
-    width: 12.4%;
-    margin-top: 0.5%;
+img#palsLogo2 {
+    width: 10.4%;
+    margin-top: 1%;
 }
 
 
